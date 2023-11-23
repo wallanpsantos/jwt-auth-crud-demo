@@ -18,6 +18,7 @@
         <spring-cloud.version>2023.0.0-RC1</spring-cloud.version>
         <sonar.organization>wallanpsantos-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <commons-lang3>3.14.0</commons-lang3>
     </properties>
     <dependencies>
         <!--		<dependency>-->
@@ -53,6 +54,19 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-plugin-api -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.9.5</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -77,11 +91,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
