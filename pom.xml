@@ -18,6 +18,7 @@
         <spring-cloud.version>2023.0.0-RC1</spring-cloud.version>
         <sonar.organization>wallanpsantos-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <commons-lang3>3.14.0</commons-lang3>
     </properties>
     <dependencies>
         <!--		<dependency>-->
@@ -52,6 +53,19 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>3.10.0.2594</version>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
