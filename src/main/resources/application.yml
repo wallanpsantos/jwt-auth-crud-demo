@@ -8,4 +8,4 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       #      ddl-auto: create-drop # Deletar e criar uma nova Tabela
-      ddl-auto: update # Apenas atualizar uma existente com a(as) entity(ies)
+      ddl-auto: update # Apenas atualizar a tabela existente com a entity, e adiciona novos campos, caso nao exista

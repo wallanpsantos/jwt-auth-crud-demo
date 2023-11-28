@@ -35,5 +35,8 @@ public class UserEntity {
     private String email;
 
     @NotBlank
+    private String login;
+
+    @NotBlank
     private String password;
 }
