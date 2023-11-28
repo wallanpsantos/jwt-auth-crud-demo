@@ -1,1 +1,54 @@
+version: '3.8'
+
 services:
+  db-postgresql:
+    container_name: db-postgresql-crud-container
+    hostname: db-postgresql-crud-container
+    image: postgres:16.1-alpine
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: "${POSTGRESQL_DB_USERNAME}"
+      POSTGRES_PASSWORD: "${POSTGRESQL_DB_PASSWORD}"
+      POSTGRES_DB: "${POSTGRESQL_DB}"
+    ports:
+      - "${POSTGRESQL_PORT}:5432"
+    networks:
+      - developer-network
+    volumes:
+      - postgresql_data:/data/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRESQL_DB_USERNAME}" ]
+      interval: 30s
+      timeout: 2s
+      retries: 5
+      start_period: 5s
+
+  auth-crud-demo:
+    container_name: auth-crud-demo-container
+    hostname: auth-crud-demo-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-postgresql:5432/authcruddb
+      - SPRING_DATASOURCE_USERNAME="${POSTGRESQL_DB_USERNAME}"
+      - SPRING_DATASOURCE_PASSWORD="${POSTGRESQL_DB_PASSWORD}"
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+      - "8787:8787" # DEBUG
+    depends_on:
+      - db-postgresql
+    networks:
+      - developer-network
+
+networks:
+  developer-network:
+    driver: bridge
+
+volumes:
+  postgresql_data:
