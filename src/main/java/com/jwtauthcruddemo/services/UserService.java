@@ -34,7 +34,7 @@ public class UserService {
         return userMapper.toUserDto(userEntity);
     }
 
-    private void validatePassword(CredentialsDto credentialsDto, UserEntity userEntity) {
+    private void validatePassword(final CredentialsDto credentialsDto, final UserEntity userEntity) {
         if (!passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), userEntity.getPassword())) {
             throw new AppLoginException("Invalid password", HttpStatus.BAD_REQUEST);
         }
