@@ -34,7 +34,7 @@ services:
     env_file:
       - ./.env
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-postgresql:5432/authcruddb
+      - SPRING_DATASOURCE_URL="${POSTGRESQL_URL}"
       - SPRING_DATASOURCE_USERNAME="${POSTGRESQL_DB_USERNAME}"
       - SPRING_DATASOURCE_PASSWORD="${POSTGRESQL_DB_PASSWORD}"
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
