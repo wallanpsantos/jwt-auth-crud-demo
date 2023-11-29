@@ -9,17 +9,17 @@ services:
       - ./app-config.env
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_USER: backend
-      POSTGRES_PASSWORD: backend
+      POSTGRES_USER: user_backend
+      POSTGRES_PASSWORD: password_backend
       POSTGRES_DB: authcruddb
     ports:
-      - "${POSTGRESQL_PORT}:5432"
+      - "5432:5432"
     networks:
       - developer-network
     volumes:
       - postgresql_data:/data/postgresql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRESQL_DB_USERNAME}" ]
+      test: [ "CMD-SHELL", "pg_isready -U user_backend" ]
       interval: 30s
       timeout: 2s
       retries: 5
@@ -35,14 +35,15 @@ services:
       - ./app-config.env
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-postgresql:5432/authcruddb
-      - SPRING_DATASOURCE_USERNAME=backend
-      - SPRING_DATASOURCE_PASSWORD=backend
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATASOURCE_USERNAME=user_backend
+      - SPRING_DATASOURCE_PASSWORD=password_backend
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
     ports:
       - "8080:8080"
       - "8787:8787" # DEBUG
     depends_on:
-      - db-postgresql
+      db-postgresql:
+        condition: service_started
     networks:
       - developer-network
 
