@@ -37,7 +37,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-postgresql:5432/authcruddb
       - SPRING_DATASOURCE_USERNAME=user_backend
       - SPRING_DATASOURCE_PASSWORD=password_backend
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
     ports:
       - "8080:8080"
       - "8787:8787" # DEBUG

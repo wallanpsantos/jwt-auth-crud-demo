@@ -36,8 +36,17 @@ public class UserEntity {
     @Size(max = 100)
     private String password;
 
-    private UserEntity() {
+    public UserEntity() {
 
+    }
+
+    public UserEntity(Long id, String firstName, String lastName, String email, String login, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.login = login;
+        this.password = password;
     }
 
     public Long getId() {
