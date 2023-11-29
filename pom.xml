@@ -16,7 +16,7 @@
     <properties>
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
-        <maven-compiler-plugin>3.8.1</maven-compiler-plugin>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <spring-cloud.version>2023.0.0-RC1</spring-cloud.version>
         <sonar.organization>wallanpsantos-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -108,7 +108,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin}</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
