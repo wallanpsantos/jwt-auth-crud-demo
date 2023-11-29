@@ -4,7 +4,7 @@ services:
   db-postgresql:
     container_name: db-postgresql-crud-container
     hostname: db-postgresql-crud-container
-    image: postgres:16.1-alpine
+    image: postgres:16.1
     env_file:
       - ./app-config.env
     environment:
