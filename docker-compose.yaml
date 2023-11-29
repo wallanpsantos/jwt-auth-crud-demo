@@ -6,12 +6,12 @@ services:
     hostname: db-postgresql-crud-container
     image: postgres:16.1-alpine
     env_file:
-      - ./.env
+      - ./app-config.env
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_USER: "${POSTGRESQL_DB_USERNAME}"
-      POSTGRES_PASSWORD: "${POSTGRESQL_DB_PASSWORD}"
-      POSTGRES_DB: "${POSTGRESQL_DB}"
+      POSTGRES_USER: backend
+      POSTGRES_PASSWORD: backend
+      POSTGRES_DB: authcruddb
     ports:
       - "${POSTGRESQL_PORT}:5432"
     networks:
@@ -32,11 +32,11 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - ./.env
+      - ./app-config.env
     environment:
-      - SPRING_DATASOURCE_URL="${POSTGRESQL_URL}"
-      - SPRING_DATASOURCE_USERNAME="${POSTGRESQL_DB_USERNAME}"
-      - SPRING_DATASOURCE_PASSWORD="${POSTGRESQL_DB_PASSWORD}"
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-postgresql:5432/authcruddb
+      - SPRING_DATASOURCE_USERNAME=backend
+      - SPRING_DATASOURCE_PASSWORD=backend
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8080:8080"
