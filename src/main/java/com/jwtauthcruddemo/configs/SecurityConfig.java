@@ -25,7 +25,7 @@ public class SecurityConfig {
     }
 
     private static void configAuthorizeHttpRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizationManagerRequestMatcherRegistry) {
-        authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.POST, "/v1/login").permitAll()
+        authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.POST, "/v1/login", "/v1/register").permitAll()
                 .anyRequest().authenticated();
     }
 
