@@ -1,6 +1,5 @@
 package com.jwtauthcruddemo.configs;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +17,6 @@ public class WebConfig {
 
     private static final String URL_PROJECT_FRONT = "http://localhost:4200";
     private static final Long MAX_AGE = 3600L;
-    private static final int CORS_FILTER_ORDER = -102;
 
     private static final List<String> ALLOWED_HEADERS = List.of(
             HttpHeaders.AUTHORIZATION,
@@ -35,13 +33,16 @@ public class WebConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = setupCorsConfiguration();
+
+        UrlBasedCorsConfigurationSource sourceBasedConfiguration = getUrlBasedCorsConfigurationSource(corsConfiguration);
+
+        return new CorsFilter(sourceBasedConfiguration);
+    }
+
+    private static UrlBasedCorsConfigurationSource getUrlBasedCorsConfigurationSource(CorsConfiguration corsConfiguration) {
         var urlSource = new UrlBasedCorsConfigurationSource();
         urlSource.registerCorsConfiguration("/**", corsConfiguration);
-
-        var registrationBean = new FilterRegistrationBean<>(new CorsFilter(urlSource));
-        registrationBean.setOrder(CORS_FILTER_ORDER);
-
-        return new CorsFilter(urlSource);
+        return urlSource;
     }
 
     private CorsConfiguration setupCorsConfiguration() {
