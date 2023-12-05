@@ -1,6 +1,7 @@
 package com.jwtauthcruddemo.services;
 
 import com.jwtauthcruddemo.dtos.input.CredentialsDto;
+import com.jwtauthcruddemo.dtos.input.SignUpDto;
 import com.jwtauthcruddemo.dtos.output.UserDto;
 import com.jwtauthcruddemo.entities.UserEntity;
 import com.jwtauthcruddemo.exceptions.AppLoginException;
@@ -38,5 +39,15 @@ public class UserService {
         if (!passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), userEntity.getPassword())) {
             throw new AppLoginException("Invalid password", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public UserDto register(SignUpDto signUpDto) {
+        boolean existsUser = userRepository.existsByLogin(signUpDto.login());
+
+        if (existsUser) {
+            throw new AppLoginException("Login already exists", HttpStatus.BAD_REQUEST);
+        }
+
+        return null;
     }
 }

@@ -1,4 +1,18 @@
 package com.jwtauthcruddemo.dtos.output;
 
-public record ErrorDto(String message) {
+public class ErrorDto {
+
+    private String message;
+
+    public ErrorDto(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
