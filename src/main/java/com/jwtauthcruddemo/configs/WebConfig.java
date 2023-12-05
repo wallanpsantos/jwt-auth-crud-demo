@@ -16,42 +16,42 @@ import java.util.List;
 @EnableWebMvc
 public class WebConfig {
 
-    private static final String URL_PROJECT_FRONT = "http://localhost:4200"; // Angular
-
+    private static final String URL_PROJECT_FRONT = "http://localhost:4200";
     private static final Long MAX_AGE = 3600L;
-    private static final int CORS_FILTER_ORDER = -102; // Order Bean initialization
+    private static final int CORS_FILTER_ORDER = -102;
+
+    private static final List<String> ALLOWED_HEADERS = List.of(
+            HttpHeaders.AUTHORIZATION,
+            HttpHeaders.CONTENT_TYPE,
+            HttpHeaders.ACCEPT
+    );
+    private static final List<String> ALLOWED_METHODS = List.of(
+            HttpMethod.GET.name(),
+            HttpMethod.POST.name(),
+            HttpMethod.PUT.name(),
+            HttpMethod.DELETE.name()
+    );
 
     @Bean
-    public FilterRegistrationBean<CorsFilter> corsFilter() {
-
+    public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = setupCorsConfiguration();
-
         var urlSource = new UrlBasedCorsConfigurationSource();
         urlSource.registerCorsConfiguration("/**", corsConfiguration);
 
         var registrationBean = new FilterRegistrationBean<>(new CorsFilter(urlSource));
         registrationBean.setOrder(CORS_FILTER_ORDER);
 
-        return registrationBean;
+        return new CorsFilter(urlSource);
     }
 
     private CorsConfiguration setupCorsConfiguration() {
         var corsConfiguration = new CorsConfiguration();
-
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addAllowedOrigin(URL_PROJECT_FRONT);
-        corsConfiguration.setAllowedHeaders(List.of(
-                HttpHeaders.AUTHORIZATION,
-                HttpHeaders.CONTENT_TYPE,
-                HttpHeaders.ACCEPT
-        ));
-        corsConfiguration.setAllowedMethods(List.of(
-                HttpMethod.GET.name(),
-                HttpMethod.POST.name(),
-                HttpMethod.PUT.name(),
-                HttpMethod.DELETE.name()
-        ));
+        corsConfiguration.setAllowedHeaders(ALLOWED_HEADERS);
+        corsConfiguration.setAllowedMethods(ALLOWED_METHODS);
         corsConfiguration.setMaxAge(MAX_AGE);
         return corsConfiguration;
     }
+
 }

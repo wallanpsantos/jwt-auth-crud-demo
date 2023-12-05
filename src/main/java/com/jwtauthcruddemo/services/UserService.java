@@ -42,12 +42,18 @@ public class UserService {
     }
 
     public UserDto register(SignUpDto signUpDto) {
+        verifyLoginExists(signUpDto);
+
+        var userEntity = userMapper.toUserEntity(signUpDto);
+
+        userEntity.setPassword(passwordEncoder.encode(CharBuffer.wrap(signUpDto.password())));
+
+        return userMapper.toUserDto(userRepository.save(userEntity));
+
+    }
+
+    private void verifyLoginExists(SignUpDto signUpDto) {
         boolean existsUser = userRepository.existsByLogin(signUpDto.login());
-
-        if (existsUser) {
-            throw new AppLoginException("Login already exists", HttpStatus.BAD_REQUEST);
-        }
-
-        return null;
+        if (existsUser) throw new AppLoginException("Login already exists", HttpStatus.BAD_REQUEST);
     }
 }
