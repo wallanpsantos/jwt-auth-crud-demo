@@ -8,12 +8,7 @@ public class UserDto {
     private String login;
     private String token;
 
-    public UserDto(Long id, String firstName, String lastName, String login, String token) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.login = login;
-        this.token = token;
+    public UserDto() {
     }
 
     public Long getId() {

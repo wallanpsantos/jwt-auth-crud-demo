@@ -9,3 +9,5 @@ spring:
     hibernate:
       #      ddl-auto: create-drop # Deletar e criar uma nova Tabela
       ddl-auto: update # Apenas atualizar a tabela existente com a entity, e adiciona novos campos, caso nao exista
+      jdbc:
+        time_zone: America/Sao_Paulo
