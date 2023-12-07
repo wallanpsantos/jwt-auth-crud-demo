@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -32,21 +33,29 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         // Portador
-        if (Objects.nonNull(header)) validateAndSetAuthentication(header);
+        if (Objects.nonNull(header)) validateAndSetAuthentication(header, request);
 
         // Continue a cadeia de filtros
         filterChain.doFilter(request, response);
     }
 
-    private void validateAndSetAuthentication(String header) {
+    private void validateAndSetAuthentication(String header, HttpServletRequest request) {
         String[] authElements = header.split(" ");
         if (authElements.length == 2 && "Bearer".equals(authElements[0])) {
             try {
-                SecurityContextHolder.getContext().setAuthentication(loginAuthProvider.validateToken(authElements[1]));
+                processTokenAuthentication(request, authElements);
             } catch (RuntimeException ex) {
                 SecurityContextHolder.clearContext();
                 throw ex;
             }
+        }
+    }
+
+    private void processTokenAuthentication(HttpServletRequest request, String[] authElements) {
+        if (Objects.equals(HttpMethod.GET, request.getMethod())) {
+            SecurityContextHolder.getContext().setAuthentication(loginAuthProvider.validateToken(authElements[1]));
+        } else {
+            SecurityContextHolder.getContext().setAuthentication(loginAuthProvider.validateTokenStrongly(authElements[1]));
         }
     }
 }

@@ -52,6 +52,12 @@ public class UserService {
 
     }
 
+    public UserDto findByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .map(userMapper::toUserDto)
+                .orElseThrow(() -> new AppLoginException("Unknow user", HttpStatus.NOT_FOUND));
+    }
+
     private void verifyLoginExists(SignUpDto signUpDto) {
         boolean existsUser = userRepository.existsByLogin(signUpDto.login());
         if (existsUser) throw new AppLoginException("Login already exists", HttpStatus.BAD_REQUEST);

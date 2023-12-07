@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.jwtauthcruddemo.dtos.output.UserDto;
+import com.jwtauthcruddemo.services.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,13 +26,20 @@ public class LoginAuthProvider {
     @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
+    private final UserService userService;
+
+    public LoginAuthProvider(UserService userService) {
+        this.userService = userService;
+    }
+
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
     public String createToken(UserDto userDto) {
-        var validity = Date.from(Instant.now().plus(TIME_TO_EXPIRED_TOKEN, ChronoUnit.HOURS));
+        final var validity = Date.from(Instant.now().plus(TIME_TO_EXPIRED_TOKEN, ChronoUnit.HOURS));
+        final var algorithm = Algorithm.HMAC256(secretKey);
 
         return JWT.create()
                 .withIssuer(userDto.getLogin())
@@ -39,19 +47,32 @@ public class LoginAuthProvider {
                 .withExpiresAt(validity)
                 .withClaim("firstName", userDto.getFirstName())
                 .withClaim("lastName", userDto.getLastName())
-                .sign(Algorithm.HMAC256(secretKey));
+                .sign(algorithm);
     }
 
     public Authentication validateToken(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(token);
+        final var algorithm = Algorithm.HMAC256(secretKey);
 
-        JWTVerifier jwtVerifier = JWT.require(algorithm).build();
+        final JWTVerifier jwtVerifier = JWT.require(algorithm).build();
 
-        DecodedJWT decodedJWT = jwtVerifier.verify(token);
+        final DecodedJWT decodedJWT = jwtVerifier.verify(token);
 
-        var userDto = getUserDtoFromDecodedJWT(decodedJWT);
+        final UserDto userDto = getUserDtoFromDecodedJWT(decodedJWT);
 
         return new UsernamePasswordAuthenticationToken(userDto, null, Collections.emptyList());
+    }
+
+
+    public Authentication validateTokenStrongly(String token) {
+        final Algorithm algorithm = Algorithm.HMAC256(secretKey);
+
+        final JWTVerifier jwtVerifier = JWT.require(algorithm).build();
+
+        final DecodedJWT decodedJWT = jwtVerifier.verify(token);
+
+        final UserDto user = userService.findByLogin(decodedJWT.getIssuer());
+
+        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
     }
 
     /* Usando as informações do JWT para criar um usuario DTO */

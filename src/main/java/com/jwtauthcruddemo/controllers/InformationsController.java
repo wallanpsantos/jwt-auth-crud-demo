@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/informations")
+@RequestMapping("/v1/messages")
 public class InformationsController {
 
     @GetMapping
