@@ -22,7 +22,7 @@ public class LoginAuthProvider {
 
     private static final int TIME_TO_EXPIRED_TOKEN = 1; // 1 Hour
 
-    @Value("{security.jwt.token.secret-key:secret-key}")
+    @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
     @PostConstruct
@@ -33,7 +33,6 @@ public class LoginAuthProvider {
     public String createToken(UserDto userDto) {
         var validity = Date.from(Instant.now().plus(TIME_TO_EXPIRED_TOKEN, ChronoUnit.HOURS));
 
-
         return JWT.create()
                 .withIssuer(userDto.getLogin())
                 .withIssuedAt(new Date())
@@ -41,7 +40,6 @@ public class LoginAuthProvider {
                 .withClaim("firstName", userDto.getFirstName())
                 .withClaim("lastName", userDto.getLastName())
                 .sign(Algorithm.HMAC256(secretKey));
-
     }
 
     public Authentication validateToken(String token) {
@@ -56,6 +54,7 @@ public class LoginAuthProvider {
         return new UsernamePasswordAuthenticationToken(userDto, null, Collections.emptyList());
     }
 
+    /* Usando as informações do JWT para criar um usuario DTO */
     private static UserDto getUserDtoFromDecodedJWT(DecodedJWT decodedJWT) {
         var userDto = new UserDto();
         userDto.setLogin(decodedJWT.getIssuer());
@@ -63,4 +62,5 @@ public class LoginAuthProvider {
         userDto.setLastName(decodedJWT.getClaim("lastName").asString());
         return userDto;
     }
+
 }

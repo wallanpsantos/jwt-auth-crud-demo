@@ -10,14 +10,23 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final LoginAuthProvider loginAuthProvider;
+
+    public SecurityConfig(LoginAuthProvider loginAuthProvider) {
+        this.loginAuthProvider = loginAuthProvider;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
+                // Filtro antes do filtro de autenticação básico, porque o JWTAuthFilter desejo que seja primeiro filtro.
+                .addFilterBefore(new JWTAuthFilter(loginAuthProvider), BasicAuthenticationFilter.class)
                 .sessionManagement(SecurityConfig::configSessionManagement)
                 .authorizeHttpRequests(SecurityConfig::configAuthorizeHttpRequests);
 
