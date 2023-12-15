@@ -9,7 +9,8 @@ ADD . $HOME
 
 # Install Maven dependency packages (locally to cache them)
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline
+# Adding Permissions and Running Maven dependency
+RUN chmod +x ./mvnw || true && ./mvnw dependency:go-offline || ./mvnw.cmd dependency:go-offline
 
 # Build application with Maven Wrapper
 COPY src ./src
